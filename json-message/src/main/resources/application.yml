@@ -1,0 +1,22 @@
+#服务器配置
+server:
+  port: 8084
+
+#spring配置
+spring:
+  kafka:
+    bootstrap-servers: 120.48.107.224:9092
+    producer:
+      acks: -1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.ftc.jsonmessage.config.serialize.JsonSerialize
+      retries: 3
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: json-message-group
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.ftc.jsonmessage.config.serialize.JsonDeserialize
+      auto-offset-reset: earliest
+

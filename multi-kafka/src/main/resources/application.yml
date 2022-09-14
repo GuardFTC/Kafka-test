@@ -1,0 +1,42 @@
+#服务器配置
+server:
+  port: 8082
+
+#spring配置
+kafka:
+
+  #主数据源配置
+  primary:
+    producer:
+      bootstrap-servers: 120.48.107.224:9092
+      ack: "-1"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
+      idempotence: true
+    consumer:
+      bootstrap-servers: 120.48.107.224:9092
+      group-id: multi-kafka-group-primary
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      poll-time: 3000
+
+  #从数据源配置
+  secondary:
+    producer:
+      bootstrap-servers: 120.48.107.224:9092
+      ack: "-1"
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
+      idempotence: true
+    consumer:
+      bootstrap-servers: 120.48.107.224:9092
+      group-id: multi-kafka-group-secondary
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      poll-time: 3000

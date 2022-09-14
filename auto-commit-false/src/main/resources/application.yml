@@ -1,0 +1,21 @@
+#服务器配置
+server:
+  port: 8083
+
+#spring配置
+spring:
+  kafka:
+    bootstrap-servers: 120.48.107.224:9092
+    producer:
+      acks: -1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 3
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: auto-commit-false-group
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
