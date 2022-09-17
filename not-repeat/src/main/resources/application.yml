@@ -1,0 +1,24 @@
+#服务器配置
+server:
+  port: 8088
+
+#spring配置
+spring:
+  kafka:
+    bootstrap-servers: 120.48.107.224:9092
+    producer:
+      acks: -1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: not-repeat-message-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        heartbeat.interval.ms: 1000
+        session.timeout.ms: 10000
+        max.poll.interval.ms: 15000
