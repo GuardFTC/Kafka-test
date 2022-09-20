@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +22,23 @@ public class ProducerClientConfig {
 
     private final com.ftc.multi.config.producer.ProducerConfig producerConfig;
 
-    @Primary
     @Bean("primaryProducerTemplate")
     public KafkaTemplate<String, String> primaryTemplate() {
+        return new KafkaTemplate<>(primaryFactory());
+    }
+
+    @Bean("primaryTransactionManager")
+    public KafkaTransactionManager<String, String> primaryTransactionManager() {
+        return new KafkaTransactionManager<>(primaryFactory());
+    }
+
+    @Bean("secondaryProducerTemplate")
+    public KafkaTemplate<String, String> secondaryTemplate() {
+        return new KafkaTemplate<>(secondaryFactory());
+    }
+
+    @Bean("primaryFactory")
+    public DefaultKafkaProducerFactory<String, String> primaryFactory() {
 
         //1.获取配置
         ProducerProperties primaryProperties = producerConfig.primaryProperties();
@@ -34,14 +47,17 @@ public class ProducerClientConfig {
         Map<String, Object> props = getProps(primaryProperties);
 
         //3.创建工厂
-        ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(props);
+        DefaultKafkaProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(props);
 
-        //4.生成KafkaTemplate,返回
-        return new KafkaTemplate<>(producerFactory);
+        //4.开启事务
+        producerFactory.setTransactionIdPrefix(primaryProperties.getTransactionIdPrefix());
+
+        //5.返回
+        return producerFactory;
     }
 
-    @Bean("secondaryProducerTemplate")
-    public KafkaTemplate<String, String> secondaryTemplate() {
+    @Bean("secondaryFactory")
+    public DefaultKafkaProducerFactory<String, String> secondaryFactory() {
 
         //1.获取配置
         ProducerProperties secondaryProperties = producerConfig.secondaryProperties();
@@ -49,11 +65,8 @@ public class ProducerClientConfig {
         //2.获取配置
         Map<String, Object> props = getProps(secondaryProperties);
 
-        //3.创建工厂
-        ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(props);
-
-        //4.生成KafkaTemplate,返回
-        return new KafkaTemplate<>(producerFactory);
+        //3.创建工厂,返回
+        return new DefaultKafkaProducerFactory<>(props);
     }
 
     /**

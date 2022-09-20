@@ -1,6 +1,7 @@
 package com.ftc.multi;
 
 import com.ftc.multi.config.KafkaSendCallBackForString;
+import com.ftc.multi.producer.TransactionProducer;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class ProducerTests {
     @Autowired
     private KafkaSendCallBackForString kafkaSendCallBackForString;
 
+    @Autowired
+    private TransactionProducer transactionProducer;
+
     @AfterEach
     @SneakyThrows({InterruptedException.class})
     void stopSeconds() {
@@ -49,5 +53,15 @@ class ProducerTests {
                 "secondary",
                 "secondary_message"
         ).addCallback(kafkaSendCallBackForString);
+    }
+
+    @Test
+    void sendWithErrorPrimary() {
+        transactionProducer.sendMessageWithErrorPrimary();
+    }
+
+    @Test
+    void sendWithErrorSecondary() {
+        transactionProducer.sendMessageWithErrorSecondary();
     }
 }

@@ -39,4 +39,9 @@ public class ProducerProperties {
      * 是否开启幂等
      */
     private boolean idempotence;
+
+    /**
+     * 事务ID前缀,不为空代表开启Kafka事务
+     */
+    private String transactionIdPrefix;
 }

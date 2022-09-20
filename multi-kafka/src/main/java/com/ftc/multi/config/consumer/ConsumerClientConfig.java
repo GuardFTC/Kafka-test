@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
@@ -26,7 +25,6 @@ public class ConsumerClientConfig {
 
     private final com.ftc.multi.config.consumer.ConsumerConfig consumerConfig;
 
-    @Primary
     @Bean("primaryConsumerFactory")
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Integer, String>> primaryConsumerFactory() {
 
