@@ -31,12 +31,6 @@ public class ProducerClientConfig {
     public KafkaTransactionManager<String, String> primaryTransactionManager() {
         return new KafkaTransactionManager<>(primaryFactory());
     }
-
-    @Bean("secondaryProducerTemplate")
-    public KafkaTemplate<String, String> secondaryTemplate() {
-        return new KafkaTemplate<>(secondaryFactory());
-    }
-
     @Bean("primaryFactory")
     public DefaultKafkaProducerFactory<String, String> primaryFactory() {
 
@@ -54,6 +48,11 @@ public class ProducerClientConfig {
 
         //5.返回
         return producerFactory;
+    }
+
+    @Bean("secondaryProducerTemplate")
+    public KafkaTemplate<String, String> secondaryTemplate() {
+        return new KafkaTemplate<>(secondaryFactory());
     }
 
     @Bean("secondaryFactory")
